@@ -6,7 +6,7 @@ import requests
 import socket
 import json
 
-farpush_url = "http://www.farpush.cn:9090"
+farpush_url = ""
 
 
 
@@ -19,31 +19,58 @@ class farpush:
 
     def push(self, title, content):
         # block name
-        for check in self.block:
-            if check in title:
-                return
-        data = {
-            "content": content,
-            "title": title,
-            "regID": self.regid,
-            'phone': self.phone,
-            'through': self.through
-        }
-        headers = {'content-type': 'application/json'}
-        r = requests.post(farpush_url + '/PushWeChatMes', data)
+        try:
+            response = requests.post(
+                farpush_url,
+                headers={
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                data=json.dumps({
+                    "body": content,
+                    "device_key": "nysrshcqielvoxsa",
+                    "title": title,
+                    "category": "myNotificationCategory",
+                    "sound": "minuet.caf",
+                    "badge": 1,
+                    "icon": "https://day.app/assets/images/avatar.jpg",
+                    "group": "wechat",
+                    "url": "mp://"
+                })
+            )
+            print('Response HTTP Status Code: {status_code}'.format(
+                status_code=response.status_code))
+            print('Response HTTP Response Body: {content}'.format(
+                content=response.content))
+        except requests.exceptions.RequestException:
+            print('HTTP Request failed')
 
+        
+        
     def mediapush(self, title, content, filename):
-        for check in self.block:
-            if check in title:
-                return
-        data = {
-            "content": content,
-            "title": title,
-            "regID": self.regid,
-            'phone': self.phone,
-            'through': self.through
-        }
-        resource = {"filename": filename}
-        data['resource'] = json.dumps(resource)
-        headers = {'content-type': 'application/json'}
-        r = requests.post(farpush_url + '/PushWeChatMes', data)
+        # block name
+        try:
+            resource = {"filename": filename}
+            data['resource'] = json.dumps(resource)
+            response = requests.post(
+                farpush_url,
+                headers={
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                data=json.dumps({
+                    "body": content,
+                    "device_key": "nysrshcqielvoxsa",
+                    "title": title,
+                    "category": "myNotificationCategory",
+                    "sound": "minuet.caf",
+                    "badge": 1,
+                    "icon": "https://day.app/assets/images/avatar.jpg",
+                    "group": "wechat",
+                    "url": "mp://"
+                })
+            )
+            print('Response HTTP Status Code: {status_code}'.format(
+                status_code=response.status_code))
+            print('Response HTTP Response Body: {content}'.format(
+                content=response.content))
+        except requests.exceptions.RequestException:
+            print('HTTP Request failed')        
